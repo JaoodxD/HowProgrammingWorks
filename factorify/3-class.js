@@ -1,8 +1,22 @@
-const logable = fields => {
-
-    class Logable {
+const logable = fields => class Logable {
         constructor(data) {
             this.values = data;
+
+            for (const key in fields) {
+                Object.defineProperty(Logable.prototype, key, {
+                    get() {
+                        console.log('Reading key: ', key);
+                        return this.values[key];
+                    },
+                    set(value) {
+                        console.log('Writing key: ', key, value);
+                        const def = fields[key];
+                        const isValid = def.type === typeof value && def.validate(value);
+                        if (isValid) this.values[key] = value;
+                        else console.log('Validation failed: ',key,value);
+                    }
+                })
+            }
         }
         toString() {
             let output = this.constructor.name + ': ';
@@ -11,27 +25,7 @@ const logable = fields => {
             }
             return output;
         }
-    }
-
-    for (const key in fields) {
-        Object.defineProperty(Logable.prototype, key, {
-            get() {
-                console.log('Reading key: ', key);
-                return this.values[key];
-            },
-            set(value) {
-                console.log('Writing key: ', key, value);
-                const def = fields[key];
-                const isValid = def.type === typeof value && def.validate(value);
-                if (isValid) this.values[key] = value;
-                else console.log('Validation failed: ',key,value);
-            }
-        })
-    }
-
-
-    return Logable;
-};
+    };
 
 const Person = logable({
     name: { type: 'string', validate: name => name.length > 0 },
