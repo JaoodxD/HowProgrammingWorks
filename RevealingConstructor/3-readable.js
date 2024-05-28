@@ -12,7 +12,3 @@ class RandomStream extends Readable {
 const randomStream = new RandomStream();
 const data = randomStream.read(10);
 console.log(data);
-/* 
-randomStream.pipe(process.stdout);  
-randomStream.unpipe(process.stdout); */
-// setTimeout(() => randomStream.destroy(),1000);

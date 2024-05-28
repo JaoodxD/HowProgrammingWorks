@@ -1,5 +1,5 @@
 {
-    const promise = new Promise(resolve => resolve(5));
+    const promise = Promise.resolve(5);
     console.log({ promise });
 }
 
